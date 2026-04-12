@@ -45,30 +45,34 @@ export default function YouTubeOAuthPage() {
   const connectToYouTube = async () => {
     console.log('🎬 YouTube login clicked - starting authentication process');
     setLoading(true);
+
+    // Open popup IMMEDIATELY (synchronously, before any async call)
+    // This prevents popup blockers from triggering
+    const popup = window.open(
+      'about:blank',
+      'youtube-auth',
+      'width=500,height=600,scrollbars=yes,resizable=yes'
+    );
+
+    if (!popup) {
+      console.error('❌ Popup was blocked by browser!');
+      setLoading(false);
+      toast({
+        title: "שגיאה",
+        description: "הדפדפן חסם את חלון ההתחברות. אנא אפשר popups ונסה שוב.",
+        variant: "destructive",
+      });
+      return;
+    }
+
     try {
       const data = await apiRequest("GET", "/api/youtube/auth-url");
-      console.log('✅ Got auth URL from server:', data.authUrl);
-      console.log('🚀 Attempting to open Google auth popup...');
-      
-      // Open OAuth popup
-      const popup = window.open(
-        data.authUrl,
-        'youtube-auth',
-        'width=500,height=600,scrollbars=yes,resizable=yes'
-      );
+      console.log('✅ Got auth URL from server, navigating popup...');
 
-      if (!popup) {
-        console.error('❌ Popup was blocked by browser!');
-        setLoading(false);
-        toast({
-          title: "שגיאה",
-          description: "הדפדפן חסם את חלון ההתחברות. אנא אפשר popups ונסה שוב.",
-          variant: "destructive",
-        });
-        return;
-      }
+      // Navigate the already-open popup to the auth URL
+      popup.location.href = data.authUrl;
 
-      console.log('✅ Popup opened successfully, waiting for response...');
+      console.log('✅ Popup navigated to auth URL, waiting for response...');
 
         // Listen for popup messages
         const handleMessage = async (event: MessageEvent) => {
@@ -101,6 +105,7 @@ export default function YouTubeOAuthPage() {
           }
         }, 1000);
     } catch (error: any) {
+      popup.close();
       toast({
         title: "שגיאה בהתחברות",
         description: error.message,
