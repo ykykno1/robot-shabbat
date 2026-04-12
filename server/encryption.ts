@@ -27,8 +27,8 @@ export class TokenEncryption {
    */
   encrypt(token: string): { encrypted: string; authTag: string; iv: string } {
     const iv = crypto.randomBytes(16); // 128-bit IV for CBC
-    const cipher = crypto.createCipher(ALGORITHM, this.encryptionKey);
-    
+    const cipher = crypto.createCipheriv(ALGORITHM, this.encryptionKey, iv);
+
     let encrypted = cipher.update(token, 'utf8', 'hex');
     encrypted += cipher.final('hex');
     
@@ -58,8 +58,9 @@ export class TokenEncryption {
     }
     
     try {
-      const decipher = crypto.createDecipher(ALGORITHM, this.encryptionKey);
-      
+      const iv = Buffer.from(encryptedData.iv, 'hex');
+      const decipher = crypto.createDecipheriv(ALGORITHM, this.encryptionKey, iv);
+
       let decrypted = decipher.update(encryptedData.encrypted, 'hex', 'utf8');
       decrypted += decipher.final('utf8');
       
