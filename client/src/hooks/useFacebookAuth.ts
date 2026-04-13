@@ -54,8 +54,7 @@ export default function useFacebookAuth() {
   // Exchange code for token mutation
   const exchangeCodeMutation = useMutation({
     mutationFn: async ({ code, redirectUri }: { code: string; redirectUri: string }) => {
-      const response = await apiRequest('POST', '/api/auth-callback', { code, redirectUri });
-      return response.json();
+      return await apiRequest('POST', '/api/auth-callback', { code, redirectUri });
     },
     onSuccess: () => {
       toast({
