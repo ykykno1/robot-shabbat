@@ -99,7 +99,8 @@ export default function useFacebookAuth() {
         `client_id=${appId}&` +
         `redirect_uri=${encodeURIComponent(redirectUri)}&` +
         `state=facebook&` +
-        `scope=public_profile,email`;
+        `config_id=951236710971360&` +
+        `response_type=code`;
       
       console.log('Facebook auth URL:', authUrl);
       
