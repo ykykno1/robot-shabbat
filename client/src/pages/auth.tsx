@@ -55,6 +55,7 @@ export default function AuthPage() {
   const handleRegister = async (e: React.FormEvent) => {
     e.preventDefault();
     const { email, username, password, confirmPassword } = registerData;
+
     if (!email || !username || !password || !confirmPassword) {
       toast({ title: "שגיאה", description: "נא למלא את כל השדות", variant: "destructive" });
       return;
@@ -71,6 +72,7 @@ export default function AuthPage() {
       toast({ title: "שגיאה", description: "שם המשתמש חייב להכיל לפחות 3 תווים", variant: "destructive" });
       return;
     }
+
     setIsLoading(true);
     try {
       const response = await fetch("/api/register", {
@@ -110,19 +112,30 @@ export default function AuthPage() {
               <TabsTrigger value="register">הרשמה</TabsTrigger>
             </TabsList>
 
+            {/* LOGIN TAB */}
             <TabsContent value="login" className="space-y-4">
               <form onSubmit={handleLogin} className="space-y-4 mt-4">
                 <div className="space-y-2">
                   <Label htmlFor="login-email">אימייל</Label>
-                  <Input id="login-email" type="email" value={loginData.email}
+                  <Input
+                    id="login-email"
+                    type="email"
+                    value={loginData.email}
                     onChange={(e) => setLoginData({ ...loginData, email: e.target.value })}
-                    placeholder="your@email.com" required />
+                    placeholder="your@email.com"
+                    required
+                  />
                 </div>
                 <div className="space-y-2">
                   <Label htmlFor="login-password">סיסמה</Label>
-                  <Input id="login-password" type="password" value={loginData.password}
+                  <Input
+                    id="login-password"
+                    type="password"
+                    value={loginData.password}
                     onChange={(e) => setLoginData({ ...loginData, password: e.target.value })}
-                    placeholder="הכנס את הסיסמה שלך" required />
+                    placeholder="הכנס את הסיסמה שלך"
+                    required
+                  />
                 </div>
                 <Button type="submit" className="w-full" disabled={isLoading}>
                   <LogIn className="ml-2 h-4 w-4" />
@@ -131,37 +144,61 @@ export default function AuthPage() {
               </form>
             </TabsContent>
 
+            {/* REGISTER TAB */}
             <TabsContent value="register" className="space-y-4">
               <form onSubmit={handleRegister} className="space-y-4 mt-4">
                 <div className="space-y-2">
                   <Label htmlFor="register-email">אימייל</Label>
-                  <Input id="register-email" type="email" value={registerData.email}
+                  <Input
+                    id="register-email"
+                    type="email"
+                    value={registerData.email}
                     onChange={(e) => setRegisterData({ ...registerData, email: e.target.value })}
-                    placeholder="your@email.com" required />
+                    placeholder="your@email.com"
+                    required
+                  />
                 </div>
                 <div className="space-y-2">
                   <Label htmlFor="register-username">שם משתמש</Label>
-                  <Input id="register-username" type="text" value={registerData.username}
+                  <Input
+                    id="register-username"
+                    type="text"
+                    value={registerData.username}
                     onChange={(e) => setRegisterData({ ...registerData, username: e.target.value })}
-                    placeholder="לפחות 3 תווים" required />
+                    placeholder="בחר שם משתמש (לפחות 3 תווים)"
+                    required
+                  />
                 </div>
                 <div className="space-y-2">
                   <Label htmlFor="register-password">סיסמה</Label>
-                  <Input id="register-password" type="password" value={registerData.password}
+                  <Input
+                    id="register-password"
+                    type="password"
+                    value={registerData.password}
                     onChange={(e) => setRegisterData({ ...registerData, password: e.target.value })}
-                    placeholder="לפחות 6 תווים" required />
+                    placeholder="לפחות 6 תווים"
+                    required
+                  />
                 </div>
                 <div className="space-y-2">
                   <Label htmlFor="register-confirm">אימות סיסמה</Label>
-                  <Input id="register-confirm" type="password" value={registerData.confirmPassword}
+                  <Input
+                    id="register-confirm"
+                    type="password"
+                    value={registerData.confirmPassword}
                     onChange={(e) => setRegisterData({ ...registerData, confirmPassword: e.target.value })}
-                    placeholder="חזור על הסיסמה" required />
+                    placeholder="חזור על הסיסמה"
+                    required
+                  />
                   {registerData.confirmPassword && registerData.password !== registerData.confirmPassword && (
                     <p className="text-red-500 text-sm">הסיסמאות אינן תואמות</p>
                   )}
                 </div>
-                <Button type="submit" className="w-full"
-                  disabled={isLoading || (!!registerData.confirmPassword && registerData.password !== registerData.confirmPassword)}>
+                <Button
+                  type="submit"
+                  className="w-full"
+                  disabled={isLoading || (!!registerData.confirmPassword && registerData.password !== registerData.confirmPassword)}
+                >
                   <UserPlus className="ml-2 h-4 w-4" />
                   {isLoading ? "נרשם..." : "הרשם"}
                 </Button>
