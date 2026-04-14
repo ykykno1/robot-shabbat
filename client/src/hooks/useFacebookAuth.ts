@@ -30,8 +30,7 @@ export default function useFacebookAuth() {
   // Mutation for logging out
   const logoutMutation = useMutation({
     mutationFn: async () => {
-      const res = await apiRequest('POST', '/api/logout');
-      return await res.json();
+      return await apiRequest('POST', '/api/logout');
     },
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ['/api/auth-status'] });
@@ -65,9 +64,9 @@ export default function useFacebookAuth() {
         title: 'התחברות בוצעה בהצלחה',
         description: 'התחברת בהצלחה לחשבון הפייסבוק שלך'
       });
-      
-      // Invalidate queries to refresh data
-      queryClient.invalidateQueries({ queryKey: ['/api/auth-status'] });
+
+      // Explicitly refetch to update isAuthenticated immediately
+      refetchAuthStatus();
       queryClient.invalidateQueries({ queryKey: ['/api/facebook/posts'] });
       queryClient.invalidateQueries({ queryKey: ['/api/facebook/pages'] });
     },
