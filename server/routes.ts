@@ -828,7 +828,7 @@ export function registerRoutes(app: Express): Server {
 
       // First, get posts from user's personal profile
       console.log("Fetching posts from Facebook API...");
-      const userPostsUrl = `https://graph.facebook.com/v22.0/me/posts?fields=id,message,created_time,privacy,attachments{media,subattachments,type,url},full_picture,picture,type,story&limit=50&access_token=${auth.accessToken}`;
+      const userPostsUrl = `https://graph.facebook.com/v22.0/me/posts?fields=id,message,created_time,privacy,full_picture,picture,type,story&limit=50&access_token=${auth.accessToken}`;
 
       const userPostsResponse = await fetch(userPostsUrl);
       let allPosts: FacebookPost[] = [];
@@ -861,7 +861,7 @@ export function registerRoutes(app: Express): Server {
             for (const page of pagesData.data) {
               try {
                 console.log(`Processing page: ${page.name} (ID: ${page.id})`);
-                const pagePostsUrl = `https://graph.facebook.com/v22.0/${page.id}/posts?fields=id,message,created_time,privacy,attachments{media,subattachments,type,url},full_picture,picture,type,story&limit=25&access_token=${page.access_token}`;
+                const pagePostsUrl = `https://graph.facebook.com/v22.0/${page.id}/feed?fields=id,message,created_time,story,permalink_url&limit=25&access_token=${page.access_token}`;
                 const pagePostsResponse = await fetch(pagePostsUrl);
 
                 if (pagePostsResponse.ok) {
